@@ -27,6 +27,7 @@ enum planck_keycodes {
 };
 
 bool mjig = false;
+int counter = 0;
 
 #define FNC MO(_FNC)
 #define TG_CAPS TG(_CAPS)
@@ -63,10 +64,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MJIG:
             if (record->event.pressed) {
                if (mjig) {
-                   SEND_STRING(SS_DELAY(15));
                    mjig = false;
                } else {
-                   SEND_STRING(SS_DELAY(15));
                    mjig = true;
                }
             }
@@ -78,12 +77,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_scan_user(void) {
-    if (mjig) {
-        SEND_STRING(SS_DELAY(10));
+    if (counter == 0 && mjig) {
         tap_code(KC_MS_UP);
         tap_code(KC_MS_DOWN);
-        SEND_STRING(SS_DELAY(30));
-        tap_code(KC_MS_LEFT);
-        tap_code(KC_MS_RIGHT);
     }
+    counter++;
+    if (counter >= 3600) counter = 0;
 }
