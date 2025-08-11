@@ -65,8 +65,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                if (mjig) {
                    mjig = false;
+                   SEND_STRING("OFF");
                } else {
                    mjig = true;
+                   SEND_STRING("ON");
                }
             }
 
