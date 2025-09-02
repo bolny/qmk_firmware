@@ -30,8 +30,12 @@ enum planck_layers {
 
 enum planck_keycodes {
     PLV = SAFE_RANGE,
-    EXT_PLV
+    EXT_PLV,
+    MJIG,
 };
+
+bool mjig = false;
+int counter = 0;
 
 #define NAV MO(_NAV)
 #define NUM MO(_NUM)
@@ -151,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     /* Adjust
     * ,-----------------------------------------------------------------------------------.
-    * |      |      |      |      | Reset|      |      |EEPRes|      |      |      |      |
+    * | MJIG |      |      |      | Reset|      |      |EEPRes|      |      |      |      |
     * |------+------+------+------+------+------+------+------+------+------+------+------|
     * |      |      |Aud on|Audoff|Audtog|      |      | RGB  |Brght+|Brght-|      |      |
     * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -161,7 +165,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * `-----------------------------------------------------------------------------------'
     */
     [_ADJ] = LAYOUT_planck_grid(
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,  XXXXXXX, XXXXXXX, EE_CLR,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
+        MJIG   , XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,  XXXXXXX, XXXXXXX, EE_CLR,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
         _______, XXXXXXX, AU_ON,   AU_OFF,  AU_TOGG,  XXXXXXX, XXXXXXX, RGB_TOG, RGB_VAI, RGB_VAD, XXXXXXX, _______,
         _______, XXXXXXX, MU_ON,   MU_OFF,  MU_TOGG,  XXXXXXX, XXXXXXX, RGB_MOD, RGB_HUI, RGB_HUD, XXXXXXX, _______,
         PLV,     _______, _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______
@@ -203,8 +207,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
+        case MJIG:
+            if (record->event.pressed) {
+               if (mjig) {
+                   mjig = false;
+                   SEND_STRING("OFF");
+               } else {
+                   mjig = true;
+                   SEND_STRING("ON");
+               }
+            }
+
+            break;
     }
     return true;
+}
+
+void matrix_scan_user(void) {
+    if (counter == 0 && mjig) {
+        tap_code(KC_MS_UP);
+        tap_code(KC_MS_DOWN);
+    }
+    counter++;
+    if (counter >= 3600) counter = 0;
 }
 
 
