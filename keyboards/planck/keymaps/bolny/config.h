@@ -17,13 +17,3 @@
  */
 
 #pragma once
-
-#define ORYX_CONFIGURATOR
-#define PLANCK_EZ_LED_LOWER 2
-#define PLANCK_EZ_LED_RAISE 3
-#define PLANCK_EZ_LED_ADJUST 8
-
-#ifdef AUDIO_ENABLE
-    #define STARTUP_SONG SONG(PLANCK_SOUND)
-#endif
-
