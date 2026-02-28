@@ -19,15 +19,15 @@
 #include QMK_KEYBOARD_H
 
 enum brendon_keycodes {
-    COPY = PLOOPY_SAFE_RANGE,
+    COPY = SAFE_RANGE,
     PASTE,
     MCTRL,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT( /* Base */
-        KC_BTN1, KC_BTN3, KC_BTN2,
-          MCTRL, OSL(1)
+        MS_BTN1, MS_BTN3, MCTRL,
+          MS_BTN2, OSL(1)
     ),
     [1] = LAYOUT(
         COPY, _______, PASTE,
